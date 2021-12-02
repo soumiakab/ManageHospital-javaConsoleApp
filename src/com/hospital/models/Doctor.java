@@ -1,14 +1,21 @@
 package com.hospital.models;
 
+import com.hospital.enumerations.SpecialtyEnum;
+
 public class Doctor extends Person{
 
 	private String professionNumber;
 	private TimeSlot shiftSlot;
 	private double salary;
+	private SpecialtyEnum doctorSpecialty;
 	
-	public Doctor(String firstname,String lastname,String phone,String address,String professionNumber,TimeSlot shiftSlot,double salary) {
+	public Doctor() {
+		
+	}
+	public Doctor(String firstname,String lastname,String phone,String address,String professionNumber,SpecialtyEnum doctorSpecialty,TimeSlot shiftSlot,double salary) {
 		super(firstname,lastname,phone,address);
 		this.professionNumber = professionNumber;
+		this.doctorSpecialty =  doctorSpecialty;
 		this.shiftSlot = shiftSlot;
 		this.salary = salary;
 	}
@@ -19,6 +26,14 @@ public class Doctor extends Person{
 
 	public void setProfessionNumber(String professionNumber) {
 		this.professionNumber = professionNumber;
+	}
+	
+	public SpecialtyEnum getDoctorSpecialty() {
+		return this.doctorSpecialty;
+	}
+
+	public void setDoctorSpecialty(SpecialtyEnum doctorSpecialty) {
+		this.doctorSpecialty =  doctorSpecialty;
 	}
   
 	public TimeSlot getShiftSlot() {

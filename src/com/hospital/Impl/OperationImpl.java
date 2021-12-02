@@ -1,6 +1,8 @@
 package com.hospital.Impl;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -22,18 +24,22 @@ import com.hospital.models.Hospital;
 import com.hospital.models.Nurse;
 import com.hospital.models.Operation;
 import com.hospital.models.Patient;
+import com.hospital.models.TimeSlot;
 
 public class OperationImpl implements OperationInterface{
 	
-	private static HashMap<String,List<Operation>> hospitalOperations = new HashMap<String,List<Operation>>();
+	private static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 	Scanner scan=new Scanner(System.in);
 	private Operation operation; 
 	
 	
 	
-	public OperationImpl (String hospital,Doctor doctor,List<Nurse> nurses,OperationEnum operationsType,PayementEnum payementType,Patient patient,Date operationDate, Date operationPayementDate) {
+	public OperationImpl (String hospital,Doctor doctor,List<Nurse> nurses,OperationEnum operationName,PayementEnum payementType,Patient patient) {
 		String reference=this.generateReference();
-		this.operation=new  Operation( hospital, reference, doctor,nurses, operationsType, payementType, patient, operationDate,operationPayementDate);
+		Date operationDate=getDateOperation(1);
+		this.operation=new  Operation( hospital, reference, doctor,nurses, operationName, payementType, patient, operationDate);
+		this.operation.setShiftSlot(this.operationTimeSlot(this.operation.getDoctor()));
+		
 	}
 	
 	
@@ -160,7 +166,7 @@ public class OperationImpl implements OperationInterface{
 					}
 					
 					HOutput.write("\n voulez vous ajouter de l argent ??");
-					addMoney=scan.nextLine();
+					addMoney=Character.toString(scan.nextLine().charAt(0));
 					if(addMoney.equalsIgnoreCase("O")) {
 						this.operation.getPatient().setWalletAmount(HValidateInput.getDouble());
 					}
@@ -186,7 +192,7 @@ public class OperationImpl implements OperationInterface{
 					}
 					
 					HOutput.write("\n voulez-vous effuctuer une autre transaction ??");
-					addMoney=scan.nextLine();
+					addMoney=Character.toString(scan.nextLine().charAt(0));
 					if(addMoney.equalsIgnoreCase("O")) {
 						TransactionImpl trImpl= new TransactionImpl();
 						this.operation.getPatient().setTransactions(trImpl.addTransaction());
@@ -227,36 +233,60 @@ public class OperationImpl implements OperationInterface{
 		}
 	}
 	
-	public static void reserveOperationDate() {
-		if(hospitalOperations.size()>0) {
-			 boolean find=false;
-			for (Map.Entry<String, List<Operation>> entry : hospitalOperations.entrySet()) {
+
+	public static Date getDateOperation(int i){ 
+		   LocalDateTime opDtae = LocalDateTime.now().plusDays(i);  
+		   String str=dtf.format(opDtae);
+		   Date dt=new Date();
+		   try {
+			   dt=new SimpleDateFormat("dd/MM/yyyy").parse(str);
+		   }catch(Exception e) {
 			   
-			    if( entry.getKey().equals(getDateOperation())) {
-			    	//hospitalOperations.replace(entry.getKey(),entry.getValue().addAll(Hospital.getOperations()));
-			    	find=true;
-			    }
+		   }
+		   return dt;
+	}
+	
+	public static double getDoctorFreeTimeSlot(Doctor doc,Date date) {
+		double timeEnd=8;
+			for(Operation op:Hospital.getOperations()) {
+				if(op.getDoctor().equals(doc) && date.compareTo(op.getOperationDate())==0) {
+					timeEnd=op.getShiftSlot().getEndTime();
+				}
 			}
-			
-			if(find == false) {
-				hospitalOperations.put(getDateOperation(),Hospital.getOperations());
-			}
-			
-		}
-		else {
-			hospitalOperations.put(getDateOperation(),Hospital.getOperations());
-		}
-		
+		return timeEnd;
 	}
 	
 	
-	public static String getDateOperation() {
-		 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-		   LocalDateTime Tomorrow = LocalDateTime.now().plusDays(1);  
-		   return dtf.format(Tomorrow);
+	
+	public TimeSlot operationTimeSlot(Doctor doc) {
+		int i=1;
+		double opStartTime;
+		double opEndTime;
+		do
+		{
+			 opStartTime=getDoctorFreeTimeSlot(doc,getDateOperation(i));
+			 opEndTime=opStartTime+this.operationDuration();
+			 double temp =(opEndTime-(int)opEndTime)*100;
+			 if(temp>=60) {
+				 opEndTime=((int)opEndTime+(int)temp/60)+temp % 60;
+				 HOutput.write((int)opEndTime+(int)temp/60);
+				 HOutput.write(temp % 60);
+			 }
+			i++;
+		}while(opStartTime==doc.getShiftSlot().getEndTime() || opEndTime >doc.getShiftSlot().getEndTime());
+		return new TimeSlot(opStartTime,opEndTime);
 	}
+	
+	
+	
+	public double operationDuration() {
+		int hour=this.operation.getOperationName().getOperationDuration()/60;
+		double minutes=((double)(this.operation.getOperationName().getOperationDuration()%60))/100;
+		return hour+minutes;
+	}
+	
 	@Override
 	public String toString() {
-		return "Operation programmer avec reference: "+this.operation.getReference()+" le : "+this.operation.getOperationDate()+" Montant a payer de :"+this.priceTopay()+ " DH vous serez remboursser de: "+this.calculateRsefund()+" DH de la part de "+this.operation.getPatient().getInsuranceType();
+		return  this.operation+"\n\t***"+" Montant a payer de :"+this.priceTopay()+ " DH vous serez remboursser de: "+this.calculateRsefund()+" DH de la part de "+this.operation.getPatient().getInsuranceType()+"***";
 	}
 }

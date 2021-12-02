@@ -16,25 +16,26 @@ public class Operation {
 	private Doctor doctor;
 	// Ajouter une classe infirmière pour aider le médecin dans son travail
 	private List<Nurse> nurses;
-	private OperationEnum operationsType;
+	private OperationEnum operationName;
 	private double refund=0;
 	private PayementEnum payementType;
 	private boolean isPayed=false;
 	private Patient patient;
 	private Date operationDate;
 	private Date operationPayementDate;
-	
-	public Operation(String hospital,String reference,Doctor doctor,List<Nurse> nurses,OperationEnum operationsType,PayementEnum payementType,Patient patient,Date operationDate, Date operationPayementDate) {
+	private TimeSlot shiftSlot;
+	//status
+	//report
+	public Operation(String hospital,String reference,Doctor doctor,List<Nurse> nurses,OperationEnum operationName,PayementEnum payementType,Patient patient,Date operationDate) {
 	
 		this.hospital = hospital;
 		this.reference = reference;
 		this.doctor = doctor;
 		this.nurses = nurses;
-		this.operationsType = operationsType;
+		this.operationName = operationName;
 		this.payementType = payementType;
 		this.patient = patient;
 		this.operationDate = operationDate;
-		this.operationPayementDate = operationPayementDate;
 	}
 	
 	public void setOperationDate(Date date) {
@@ -53,6 +54,13 @@ public class Operation {
 		return this.operationPayementDate;
 	}
 	
+	public TimeSlot getShiftSlot() {
+		return shiftSlot;
+	}
+
+	public void setShiftSlot(TimeSlot shiftSlot) {
+		this.shiftSlot = shiftSlot;
+	}
 	
 	public void setHospital(String hospital) {
 		this.hospital=hospital;
@@ -107,7 +115,11 @@ public class Operation {
 	}
 	
 	public double getprice() {
-		return this.operationsType.getPrice();
+		return this.operationName.getPrice();
+	}
+	
+	public OperationEnum getOperationName() {
+		return this.operationName;
 	}
 	
 	public double getRefund( ) {
@@ -133,7 +145,7 @@ public class Operation {
 	@Override
 	public String toString() {
 		return "Operation [reference=" + reference + ", patient=" + patient
-				+ ", operation Date=" + operationDate + "]";
+				+ ", operation Date=" + operationDate + " à "+shiftSlot.getStartTime()+" jusqu'à "+shiftSlot.getEndTime()+" ]";
 	}
 	// Essayer de structurer votre travail avec la création des interfaces qui vous permettez d'implémenter les méthodes nécessaires.
 	

@@ -17,6 +17,8 @@ import java.util.Scanner;
 import com.hospital.enumerations.InsuranceType;
 import com.hospital.enumerations.OperationEnum;
 import com.hospital.enumerations.PayementEnum;
+import com.hospital.enumerations.RoomLocation;
+import com.hospital.enumerations.SpecialtyEnum;
 
 public class ManageHospital {
 	
@@ -69,7 +71,7 @@ public class ManageHospital {
 		case 2:getPatientByRef();
 				menu();
 			break;
-		case 3:HOutput.write(OperationImpl. getDateOperation());
+		case 3:HOutput.write(OperationImpl. getDateOperation(1));
 			payOperation();
 				menu();
 			break;
@@ -102,22 +104,22 @@ public class ManageHospital {
 	
 	
 	public static void initHospitalDoctors() {
-		Hospital.getDoctors().add(new Doctor("khalid","benjloun","+2126-56767854","23 rue xxx","A001",new TimeSlot(8,20),20000));
-		Hospital.getDoctors().add(new Doctor("omar","tazi","+2126-56767854","23 rue xxx","A002",new TimeSlot(8,20),20000));
-		Hospital.getDoctors().add(new Doctor("ahemad","malik","+2126-56767854","23 rue xxx","A003",new TimeSlot(8,20),20000));
-		Hospital.getDoctors().add(new Doctor("hassan","rami","+2126-56767854","23 rue xxx","A004",new TimeSlot(8,20),20000));
-		Hospital.getDoctors().add(new Doctor("meryem","moetaz","+2126-56767854","23 rue xxx","A005",new TimeSlot(8,20),20000));
-		Hospital.getDoctors().add(new Doctor("ghita","elIdressi","+2126-56767854","23 rue xxx","A006",new TimeSlot(8,20),20000));
+		Hospital.getDoctors().add(new Doctor("khalid","benjloun","+2126-56767854","23 rue xxx","A001",SpecialtyEnum.Cardiovascular,new TimeSlot(8,20),20000));
+		Hospital.getDoctors().add(new Doctor("omar","tazi","+2126-56767854","23 rue xxx","A002",SpecialtyEnum.Gastroenterology,new TimeSlot(8,20),20000));
+		Hospital.getDoctors().add(new Doctor("ahemad","malik","+2126-56767854","23 rue xxx","A003",SpecialtyEnum.Ophthalmology,new TimeSlot(8,20),20000));
+		Hospital.getDoctors().add(new Doctor("hassan","rami","+2126-56767854","23 rue xxx","A004",SpecialtyEnum.Orthopedic,new TimeSlot(8,20),20000));
+		Hospital.getDoctors().add(new Doctor("meryem","moetaz","+2126-56767854","23 rue xxx","A005",SpecialtyEnum.Cardiovascular,new TimeSlot(8,20),20000));
+		Hospital.getDoctors().add(new Doctor("ghita","elIdressi","+2126-56767854","23 rue xxx","A006",SpecialtyEnum.Gastroenterology,new TimeSlot(8,20),20000));
 		
 	}
 	
 	public static void initHospitalRooms() {
-		Hospital.getRooms().add(new Room(1,0));
-		Hospital.getRooms().add(new Room(2,1));
-		Hospital.getRooms().add(new Room(3,1));
-		Hospital.getRooms().add(new Room(7,2));
-		Hospital.getRooms().add(new Room(6,3));
-		Hospital.getRooms().add(new Room(4,3));
+		Hospital.getRooms().add(new Room(1,RoomLocation.Rc));
+		Hospital.getRooms().add(new Room(2,RoomLocation.Rc));
+		Hospital.getRooms().add(new Room(3,RoomLocation.Stage1));
+		Hospital.getRooms().add(new Room(7,RoomLocation.Stage1));
+		Hospital.getRooms().add(new Room(6,RoomLocation.Stage1));
+		Hospital.getRooms().add(new Room(4,RoomLocation.Rc));
 				
 	}
 	
@@ -157,11 +159,11 @@ public class ManageHospital {
 		
 		HOutput.write("**choisir l operation **");
 		HOutput.showList(OperationEnum.values());
-		OperationEnum operationsType=opertionsNames[HValidateInput.getInteger()];
+		OperationEnum operationsName=opertionsNames[HValidateInput.getInteger()];
 		
 		HOutput.write("**choisir un medecin**");
-		HOutput.showList(Hospital.getDoctors());
-		Doctor doctor=Hospital.getDoctors().get(HValidateInput.getInteger());
+		//HOutput.showList(Hospital.getDoctors());
+		Doctor doctor=doctorsBySpeciality(operationsName.getSpeciality());
 		
 		List<Nurse> nurses=new ArrayList<Nurse>();
 		HOutput.write("**choisir une infermiere**");
@@ -186,12 +188,9 @@ public class ManageHospital {
 			HOutput.write("**Le montant que vous avez est de ? **");
 			patientImpl.getPatient().setWalletAmount(HValidateInput.getDouble());
 			
-		}
+		}				
+		OperationImpl opImpl=new OperationImpl(hospital.getName(),doctor,nurses,operationsName,payementChoose,patientImpl.getPatient());
 		
-		Date operationDate=new Date();
-		Date operationPayementDate=new Date();
-		
-		OperationImpl opImpl=new OperationImpl(hospital.getName(),doctor,nurses,operationsType,payementChoose,patientImpl.getPatient(),operationDate,operationPayementDate);
 		opImpl.payOperation();
 		
 		
@@ -243,18 +242,33 @@ public class ManageHospital {
 	
 	public static void doctors() {
 		if(Hospital.getpatients().size() == 0) {
-			HOutput.write("Liste des patients est vide ");
+			HOutput.write("Liste des medecins est vide ");
 			
 		}else {
 			HOutput.showList(Hospital.getpatients());
 		}
 		
 	}
+	public static Doctor doctorsBySpeciality(SpecialtyEnum sp) {
+		Doctor doctor=new Doctor();
+		if(Hospital.getpatients().size() == 0) {
+			HOutput.write("nous avons pas un medecin avec cette specialite pour le moment  ");			
+		}
+		else{
+			List<Doctor> doctorsSp=DoctorImpl.getDoctorWithSpeciality(sp);
+			HOutput.showList(doctorsSp);
+			doctor=doctorsSp.get(HValidateInput.getInteger());
+		}
+		
+		return doctor;
+	}
+	
+	
 	
 	
 	public static void nurses() {
 		if(Hospital.getpatients().size() == 0) {
-			HOutput.write("Liste des patients est vide ");
+			HOutput.write("Liste des infermiers(es) est vide ");
 			
 		}else {
 			HOutput.showList(Hospital.getpatients());
@@ -267,4 +281,5 @@ public class ManageHospital {
 	}
 	
 	//change Operation status
+	//report
 }

@@ -1,11 +1,13 @@
 package com.hospital.models;
 
+import com.hospital.enumerations.RoomLocation;
+
 public class Room {
 
 	private int number;
-	private int stage;
+	private RoomLocation stage;
 	
-	public Room(int number,int stage) {
+	public Room(int number,RoomLocation stage) {
 		this.number = number;
 		this.stage = stage;
 	}
@@ -18,11 +20,11 @@ public class Room {
 		this.number = number;
 	}
 
-	public int getStage() {
+	public RoomLocation getStage() {
 		return stage;
 	}
 
-	public void setStage(int stage) {
+	public void setStage(RoomLocation stage) {
 		this.stage = stage;
 	}
 

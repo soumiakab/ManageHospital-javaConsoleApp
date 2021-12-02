@@ -3,20 +3,24 @@ package com.hospital.enumerations;
 public enum OperationEnum {
 
 	
-	OPERATION1("OPERATION1",20000,false),
-	OPERATION2("OPERATION2",30000,false),
-	OPERATION3("OPERATION3",7000,true),
-	OPERATION4("OPERATION4",13000,false);
+	OPERATION_Gastroenterology("OPERATION_Gastroenterology",20000,OperationsTypeEnum.NORMAL,SpecialtyEnum.Gastroenterology,105),
+	OPERATION_Cardiovascular("OPERATION_Cardiovascular",30000,OperationsTypeEnum.URGENT,SpecialtyEnum.Cardiovascular,240),
+	OPERATION_Orthopedic("OPERATION_orthopedic",7000,OperationsTypeEnum.URGENT,SpecialtyEnum.Orthopedic,240),
+	OPERATION_Ophthalmology("OPERATION_ophthalmology",13000,OperationsTypeEnum.NORMAL,SpecialtyEnum.Ophthalmology,90);
 	
 	
 	private String name;
 	double price;
-	boolean payBefore;
+	OperationsTypeEnum type;
+	SpecialtyEnum specialty;
+	int durationOpInMinutes;
 	
-	OperationEnum(String name,double price,boolean payBefore) {
+	OperationEnum(String name,double price,OperationsTypeEnum type,SpecialtyEnum specialty,int durationOpInMinutes) {
 		this.name = name;
 		this.price = price;
-		this.payBefore = payBefore;
+		this.type = type;
+		this.specialty=specialty;
+		this.durationOpInMinutes= durationOpInMinutes;
 	}
 	
 	public String getName() {
@@ -27,7 +31,19 @@ public enum OperationEnum {
 		return price;
 	}
 	
-	public boolean getPayBefore() {
-		return payBefore;
+	public OperationsTypeEnum  getPayBefore() {
+		return type;
 	}
+	
+	
+	public SpecialtyEnum  getSpeciality() {
+		return specialty;
+	}
+	
+	
+	public int getOperationDuration() {
+		return durationOpInMinutes;
+	}
+	
+	
 }
