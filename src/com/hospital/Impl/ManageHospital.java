@@ -202,34 +202,12 @@ public class ManageHospital {
 		}
 	}
 		
-	
-	public static void getPatientByRef() {
-		
-	}
-	
-	
-	public static void payOperation() {
-		
-	}
-	
-	public static void addDoctor() {
-		
-	}
-	
-	public static void addNurse() {
-		
-	}
-	
-	public static void availableRoom() {
-		
-	}
-	
 	public static void doctors() {
-		if(Hospital.getpatients().size() == 0) {
+		if(Hospital.getDoctors().size() == 0) {
 			HOutput.write("Liste des medecins est vide ");
 			
 		}else {
-			HOutput.showList(Hospital.getpatients());
+			HOutput.showList(Hospital.getDoctors());
 		}
 		
 	}
@@ -251,11 +229,11 @@ public class ManageHospital {
 	
 	
 	public static void nurses() {
-		if(Hospital.getpatients().size() == 0) {
+		if(Hospital.gethNurses().size() == 0) {
 			HOutput.write("Liste des infermiers(es) est vide ");
 			
 		}else {
-			HOutput.showList(Hospital.getpatients());
+			HOutput.showList(Hospital.gethNurses());
 		}
 	}
 	
