@@ -42,12 +42,10 @@ public class ManageHospital {
 		
 		HOutput.write("welcome to *****");
 		HOutput.write("\t1-Inscription patient\n");
-		HOutput.write("\t2-les operations programmer\n");
-		HOutput.write("\t3-infos d' operation \n");
-		HOutput.write("\t4-payement\n");
-		HOutput.write("\t5-nos medecins \n");
-		HOutput.write("\t6-nos infermieres\n");
-		HOutput.write("\t7-Liste des patients\n");
+		HOutput.write("\t2-les operations \n");
+		HOutput.write("\t3-nos medecins \n");
+		HOutput.write("\t4-nos infermieres\n");
+		HOutput.write("\t5-Liste des patients\n");
 		chooseMethod(HValidateInput.getInteger());
 		
 	}
@@ -64,20 +62,13 @@ public class ManageHospital {
 		menu();
 			break;
 			
-		case 2:getPatientByRef();
-				menu();
-			break;
-		case 3:HOutput.write(OperationImpl. getDateOperation(1));
-			payOperation();
-				menu();
-			break;
-		case 4:doctors();
+		case 2:doctors();
 			menu();
 			break;
-		case 5:nurses();
+		case 3:nurses();
 			menu();
 			break;
-		case 6:showHPatients();
+		case 4:showHPatients();
 			menu();
 			break;
 		default: menu();
@@ -242,6 +233,14 @@ public class ManageHospital {
 		
 	}
 	
-	//change Operation status
-	//report
+public static void getPatientByRef() {
+		
+	}
+	
+	
+	public static void payOperation() {
+		
+	}
+	
+	
 }
