@@ -45,13 +45,9 @@ public class ManageHospital {
 		HOutput.write("\t2-les operations programmer\n");
 		HOutput.write("\t3-infos d' operation \n");
 		HOutput.write("\t4-payement\n");
-		HOutput.write("\t5-ajouter un medecin \n");
-		HOutput.write("\t6-ajouter une infermiere\n");
-		HOutput.write("\t7-les salles d operation disponibles\n");
-		HOutput.write("\t8-nos medecins \n");
-		HOutput.write("\t9-Recuperer argent assurance \n");
-		HOutput.write("\t10-nos infermieres\n");
-		HOutput.write("\t11-Liste des patients\n");
+		HOutput.write("\t5-nos medecins \n");
+		HOutput.write("\t6-nos infermieres\n");
+		HOutput.write("\t7-Liste des patients\n");
 		chooseMethod(HValidateInput.getInteger());
 		
 	}
@@ -75,25 +71,13 @@ public class ManageHospital {
 			payOperation();
 				menu();
 			break;
-		case 4:addDoctor();
+		case 4:doctors();
 			menu();
 			break;
-		case 5:addNurse();
+		case 5:nurses();
 			menu();
 			break;
-		case 6:availableRoom();
-			menu();
-			break;
-		case 7:doctors();
-			menu();
-			break;
-		case 8:refundInsurance();
-			menu();
-			break;
-		case 9:nurses();
-			menu();
-			break;
-		case 10:showHPatients();
+		case 6:showHPatients();
 			menu();
 			break;
 		default: menu();
